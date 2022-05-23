@@ -51,23 +51,21 @@ class _MyTutorSplashScreenState extends State<MyTutorSplashScreen> {
     screenHeight = MediaQuery.of(context).size.height;
     screenWidth = MediaQuery.of(context).size.width;
     return Scaffold(
-      body: Center(
-        child: SafeArea(
-          child: Column(
+      body: Stack(
+        alignment: Alignment.center,
+        children: [
+          Container(
+              decoration: const BoxDecoration(
+                  image: DecorationImage(
+                      image: AssetImage("assets/images/background.jpg"),
+                      fit: BoxFit.cover))),
+          Column(
             mainAxisAlignment: MainAxisAlignment.spaceAround,
             children: [
               Padding(
                 padding: const EdgeInsets.all(64.0),
                 child: Image.asset('assets/images/MyTutor.jpg'),
               ),
-              const Text(
-                "MyTutor",
-                style: TextStyle(
-                  fontSize: 40,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-              const CircularProgressIndicator(),
               const Text("Version 1.0",
                   style: TextStyle(
                     fontSize: 16,
@@ -75,7 +73,7 @@ class _MyTutorSplashScreenState extends State<MyTutorSplashScreen> {
                   )),
             ],
           ),
-        ),
+        ],
       ),
     );
   }

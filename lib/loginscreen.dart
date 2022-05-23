@@ -39,106 +39,115 @@ class _MyTutorLoginScreenState extends State<MyTutorLoginScreen> {
     }
     return Scaffold(
         body: SingleChildScrollView(
-      child: Center(
-        child: SizedBox(
-          width: ctrwidth,
-          child: Form(
-            key: _formKey,
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Padding(
-                  padding: const EdgeInsets.fromLTRB(32, 32, 32, 32),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      SizedBox(
-                          height: screenHeight / 2.5,
-                          width: screenWidth,
-                          child: Image.asset('assets/images/MyTutor.jpg')),
-                      const Text(
-                        "Login",
-                        style: TextStyle(fontSize: 24),
-                      ),
-                      const SizedBox(height: 10),
-                      TextFormField(
-                        controller: _emailController,
-                        decoration: InputDecoration(
-                            labelText: 'Email',
-                            border: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(5.0))),
-                        validator: (value) {
-                          if (value == null || value.isEmpty) {
-                            return 'Please enter valid email';
-                          }
-                          bool emailValid = RegExp(
-                                  r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+")
-                              .hasMatch(value);
-
-                          if (!emailValid) {
-                            return 'Please enter a valid email';
-                          }
-                          return null;
-                        },
-                      ),
-                      const SizedBox(
-                        height: 10,
-                      ),
-                      TextFormField(
-                        controller: _passwordController,
-                        obscureText: true,
-                        decoration: InputDecoration(
-                            labelText: 'Password',
-                            border: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(5.0))),
-                        validator: (value) {
-                          if (value == null || value.isEmpty) {
-                            return 'Please enter your password';
-                          }
-                          if (value.length < 6) {
-                            return "Password must be at least 6 characters";
-                          }
-                          return null;
-                        },
-                      ),
-                      Row(
+      child: Stack(
+        children: [
+          Container(
+              decoration: const BoxDecoration(
+                  image: DecorationImage(
+                      image: AssetImage("assets/images/background.jpg"),
+                      fit: BoxFit.cover))),
+          Center(
+            child: SizedBox(
+              width: ctrwidth,
+              child: Form(
+                key: _formKey,
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.spaceAround,
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.fromLTRB(32, 32, 32, 32),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        mainAxisSize: MainAxisSize.min,
                         children: [
-                          Checkbox(
-                            value: remember,
-                            onChanged: (bool? value) {
-                              _onRememberMeChanged(value!);
+                          SizedBox(
+                              height: screenHeight / 2.5,
+                              width: screenWidth,
+                              child: Image.asset('assets/images/MyTutor.jpg')),
+                          const Text(
+                            "User Login",
+                            style: TextStyle(fontSize: 24),
+                          ),
+                          const SizedBox(height: 10),
+                          TextFormField(
+                            controller: _emailController,
+                            decoration: InputDecoration(
+                                labelText: 'Email',
+                                border: OutlineInputBorder(
+                                    borderRadius: BorderRadius.circular(5.0))),
+                            validator: (value) {
+                              if (value == null || value.isEmpty) {
+                                return 'Please enter valid email';
+                              }
+                              bool emailValid = RegExp(
+                                      r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+")
+                                  .hasMatch(value);
+
+                              if (!emailValid) {
+                                return 'Please enter a valid email';
+                              }
+                              return null;
                             },
                           ),
-                          const Text("Remember Me")
+                          const SizedBox(
+                            height: 10,
+                          ),
+                          TextFormField(
+                            controller: _passwordController,
+                            obscureText: true,
+                            decoration: InputDecoration(
+                                labelText: 'Password',
+                                border: OutlineInputBorder(
+                                    borderRadius: BorderRadius.circular(5.0))),
+                            validator: (value) {
+                              if (value == null || value.isEmpty) {
+                                return 'Please enter your password';
+                              }
+                              if (value.length < 6) {
+                                return "Password must be at least 6 characters";
+                              }
+                              return null;
+                            },
+                          ),
+                          Row(
+                            children: [
+                              Checkbox(
+                                value: remember,
+                                onChanged: (bool? value) {
+                                  _onRememberMeChanged(value!);
+                                },
+                              ),
+                              const Text("Remember Me")
+                            ],
+                          ),
+                          SizedBox(
+                            width: screenWidth,
+                            height: 50,
+                            child: ElevatedButton(
+                              child: const Text("Login"),
+                              onPressed: _loginUser,
+                            ),
+                          ),
+                          const SizedBox(
+                            height: 10,
+                          ),
+                          SizedBox(
+                            width: screenWidth,
+                            height: 50,
+                            child: ElevatedButton(
+                              child: const Text("Register"),
+                              onPressed: _registerUserScreen,
+                            ),
+                          ),
                         ],
                       ),
-                      SizedBox(
-                        width: screenWidth,
-                        height: 50,
-                        child: ElevatedButton(
-                          child: const Text("Login"),
-                          onPressed: _loginUser,
-                        ),
-                      ),
-                      const SizedBox(
-                        height: 10,
-                      ),
-                      SizedBox(
-                        width: screenWidth,
-                        height: 50,
-                        child: ElevatedButton(
-                          child: const Text("Register"),
-                          onPressed: _registerUserScreen,
-                        ),
-                      ),
-                    ],
-                  ),
+                    ),
+                  ],
                 ),
-              ],
+              ),
             ),
           ),
-        ),
+        ],
       ),
     ));
   }

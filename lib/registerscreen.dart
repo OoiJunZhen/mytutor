@@ -17,7 +17,7 @@ class MyTutorRegisterScreen extends StatefulWidget {
 
 class _MyTutorRegisterScreenState extends State<MyTutorRegisterScreen> {
   late double screenHeight, screenWidth, ctrwidth;
-  String pathAsset = 'assets/images/camera.png';
+  String pathAsset = 'assets/images/newuser.png';
   var _image;
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
@@ -38,156 +38,184 @@ class _MyTutorRegisterScreenState extends State<MyTutorRegisterScreen> {
     }
     return Scaffold(
         body: SingleChildScrollView(
-      child: Center(
-        child: SizedBox(
-          width: ctrwidth,
-          child: Form(
-            key: _formKey,
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Padding(
-                  padding: const EdgeInsets.fromLTRB(32, 32, 32, 32),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      SizedBox(
-                          height: screenHeight / 2.5,
-                          width: screenWidth,
-                          child: Image.asset('assets/images/MyTutor.jpg')),
-                      const Text(
-                        "Register User",
-                        style: TextStyle(fontSize: 24),
-                      ),
-                      const SizedBox(height: 20),
-                      Center(
-                        child: Card(
-                          child: GestureDetector(
-                              onTap: () => {_takePictureDialog()},
-                              child: SizedBox(
-                                  height: screenHeight / 6.0,
-                                  width: screenWidth / 3.0,
-                                  child: _image == null
-                                      ? Image.asset(pathAsset)
-                                      : Image.file(
-                                          _image,
-                                          fit: BoxFit.cover,
-                                        ))),
-                        ),
-                      ),
-                      const SizedBox(
-                        height: 10,
-                      ),
-                      TextFormField(
-                        controller: _emailController,
-                        decoration: InputDecoration(
-                            labelText: 'Email',
-                            border: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(5.0))),
-                        validator: (value) {
-                          if (value == null || value.isEmpty) {
-                            return 'Please enter valid email';
-                          }
-                          bool emailValid = RegExp(
-                                  r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+")
-                              .hasMatch(value);
+      child: Stack(
+        children: [
+          Container(
+              decoration: const BoxDecoration(
+                  image: DecorationImage(
+                      image: AssetImage("assets/images/background.jpg"),
+                      fit: BoxFit.cover))),
+          Center(
+            child: SizedBox(
+              width: ctrwidth,
+              child: Form(
+                key: _formKey,
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.fromLTRB(32, 32, 32, 32),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          const Text(
+                            "Register For New User",
+                            style: TextStyle(fontSize: 24),
+                          ),
+                          const SizedBox(height: 20),
+                          Center(
+                            child: Card(
+                              child: GestureDetector(
+                                  onTap: () => {_takePictureDialog()},
+                                  child: SizedBox(
+                                      height: screenHeight / 7.0,
+                                      width: screenWidth / 3.5,
+                                      child: _image == null
+                                          ? Image.asset(pathAsset)
+                                          : Image.file(
+                                              _image,
+                                              fit: BoxFit.cover,
+                                            ))),
+                            ),
+                          ),
+                          const SizedBox(
+                            height: 10,
+                          ),
+                          TextFormField(
+                            controller: _emailController,
+                            decoration: InputDecoration(
+                                labelText: 'Email',
+                                border: OutlineInputBorder(
+                                    borderRadius: BorderRadius.circular(5.0))),
+                            validator: (value) {
+                              if (value == null || value.isEmpty) {
+                                return 'Please enter valid email';
+                              }
+                              bool emailValid = RegExp(
+                                      r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+")
+                                  .hasMatch(value);
 
-                          if (!emailValid) {
-                            return 'Please enter a valid email';
-                          }
-                          return null;
-                        },
+                              if (!emailValid) {
+                                return 'Please enter a valid email';
+                              }
+                              return null;
+                            },
+                          ),
+                          const SizedBox(
+                            height: 10,
+                          ),
+                          TextFormField(
+                            controller: _passwordController,
+                            obscureText: true,
+                            decoration: InputDecoration(
+                                labelText: 'Password',
+                                border: OutlineInputBorder(
+                                    borderRadius: BorderRadius.circular(5.0))),
+                            validator: (value) {
+                              if (value == null || value.isEmpty) {
+                                return 'Please enter your password';
+                              }
+                              if (value.length < 6) {
+                                return "Password must be at least 6 characters";
+                              }
+                              return null;
+                            },
+                          ),
+                          const SizedBox(
+                            height: 10,
+                          ),
+                          TextFormField(
+                            controller: _nameController,
+                            decoration: InputDecoration(
+                                labelText: 'Name',
+                                border: OutlineInputBorder(
+                                    borderRadius: BorderRadius.circular(5.0))),
+                            validator: (value) {
+                              if (value == null || value.isEmpty) {
+                                return 'Please enter your name';
+                              }
+                              return null;
+                            },
+                          ),
+                          const SizedBox(
+                            height: 10,
+                          ),
+                          TextFormField(
+                            controller: _phoneNoController,
+                            decoration: InputDecoration(
+                                labelText: 'Phone Number',
+                                border: OutlineInputBorder(
+                                    borderRadius: BorderRadius.circular(5.0))),
+                            validator: (value) {
+                              if (value == null || value.isEmpty) {
+                                return 'Please enter your Phone Number';
+                              }
+                              if (value.length < 10) {
+                                return "Please enter the valid Phone Number.";
+                              }
+                              return null;
+                            },
+                          ),
+                          const SizedBox(
+                            height: 10,
+                          ),
+                          TextFormField(
+                            controller: _homeAddController,
+                            decoration: InputDecoration(
+                                labelText: 'Home Address',
+                                border: OutlineInputBorder(
+                                    borderRadius: BorderRadius.circular(5.0))),
+                            validator: (value) {
+                              if (value == null || value.isEmpty) {
+                                return 'Please enter your Home Address';
+                              }
+                              return null;
+                            },
+                          ),
+                          const SizedBox(
+                            height: 10,
+                          ),
+                          Row(
+                            children: [
+                              Expanded(
+                                flex: 1,
+                                child: SizedBox(
+                                    width: 150,
+                                    height: 50,
+                                    child: ElevatedButton(
+                                      child: const Text("REGISTER"),
+                                      onPressed: _registerUser,
+                                    )),
+                              ),
+                              const SizedBox(width: 5),
+                              Expanded(
+                                flex: 1,
+                                child: TextButton(
+                                  child: const Text(
+                                    "Exit",
+                                    style: TextStyle(),
+                                  ),
+                                  onPressed: () {
+                                    Navigator.pushReplacement(
+                                        context,
+                                        MaterialPageRoute(
+                                            builder: (content) =>
+                                                const MyTutorLoginScreen()));
+                                  },
+                                ),
+                              )
+                            ],
+                          ),
+                        ],
                       ),
-                      const SizedBox(
-                        height: 10,
-                      ),
-                      TextFormField(
-                        controller: _passwordController,
-                        obscureText: true,
-                        decoration: InputDecoration(
-                            labelText: 'Password',
-                            border: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(5.0))),
-                        validator: (value) {
-                          if (value == null || value.isEmpty) {
-                            return 'Please enter your password';
-                          }
-                          if (value.length < 6) {
-                            return "Password must be at least 6 characters";
-                          }
-                          return null;
-                        },
-                      ),
-                      const SizedBox(
-                        height: 10,
-                      ),
-                      TextFormField(
-                        controller: _nameController,
-                        decoration: InputDecoration(
-                            labelText: 'Name',
-                            border: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(5.0))),
-                        validator: (value) {
-                          if (value == null || value.isEmpty) {
-                            return 'Please enter your name';
-                          }
-                          return null;
-                        },
-                      ),
-                      const SizedBox(
-                        height: 10,
-                      ),
-                      TextFormField(
-                        controller: _phoneNoController,
-                        decoration: InputDecoration(
-                            labelText: 'Phone Number',
-                            border: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(5.0))),
-                        validator: (value) {
-                          if (value == null || value.isEmpty) {
-                            return 'Please enter your Phone Number';
-                          }
-                          if (value.length < 10) {
-                            return "Please enter the valid Phone Number.";
-                          }
-                          return null;
-                        },
-                      ),
-                      const SizedBox(
-                        height: 10,
-                      ),
-                      TextFormField(
-                        controller: _homeAddController,
-                        decoration: InputDecoration(
-                            labelText: 'Home Address',
-                            border: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(5.0))),
-                        validator: (value) {
-                          if (value == null || value.isEmpty) {
-                            return 'Please enter your Home Address';
-                          }
-                          return null;
-                        },
-                      ),
-                      const SizedBox(
-                        height: 10,
-                      ),
-                      SizedBox(
-                        width: screenWidth,
-                        height: 50,
-                        child: ElevatedButton(
-                          child: const Text("REGISTER"),
-                          onPressed: _registerUser,
-                        ),
-                      )
-                    ],
-                  ),
+                    ),
+                  ],
                 ),
-              ],
+              ),
             ),
           ),
-        ),
+        ],
       ),
     ));
   }
