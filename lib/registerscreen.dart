@@ -40,11 +40,6 @@ class _MyTutorRegisterScreenState extends State<MyTutorRegisterScreen> {
         body: SingleChildScrollView(
       child: Stack(
         children: [
-          Container(
-              decoration: const BoxDecoration(
-                  image: DecorationImage(
-                      image: AssetImage("assets/images/background.jpg"),
-                      fit: BoxFit.cover))),
           Center(
             child: SizedBox(
               width: ctrwidth,
@@ -185,7 +180,7 @@ class _MyTutorRegisterScreenState extends State<MyTutorRegisterScreen> {
                                     height: 50,
                                     child: ElevatedButton(
                                       child: const Text("REGISTER"),
-                                      onPressed: _registerUser,
+                                      onPressed: _registerUserDialog,
                                     )),
                               ),
                               const SizedBox(width: 5),
@@ -218,6 +213,46 @@ class _MyTutorRegisterScreenState extends State<MyTutorRegisterScreen> {
         ],
       ),
     ));
+  }
+
+  _registerUserDialog() {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        // return object of type Dialog
+        return AlertDialog(
+          title: const Text(
+            "Register New User ",
+          ),
+          content: const Text(
+            "Are you sure?",
+            style: TextStyle(),
+          ),
+          actions: <Widget>[
+            // usually buttons at the bottom of the dialog
+            TextButton(
+              child: const Text(
+                "Yes",
+                style: TextStyle(),
+              ),
+              onPressed: () {
+                Navigator.of(context).pop();
+                _registerUser();
+              },
+            ),
+            TextButton(
+              child: const Text(
+                "No",
+                style: TextStyle(),
+              ),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+          ],
+        );
+      },
+    );
   }
 
   _takePictureDialog() {

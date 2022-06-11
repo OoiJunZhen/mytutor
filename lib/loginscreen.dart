@@ -5,7 +5,9 @@ import 'package:http/http.dart' as http;
 import 'package:mytutor/constants.dart';
 import 'package:mytutor/mainscreen.dart';
 import 'package:mytutor/registerscreen.dart';
+import 'package:mytutor/subjectscreen.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'model/user.dart';
 
 class MyTutorLoginScreen extends StatefulWidget {
   const MyTutorLoginScreen({Key? key}) : super(key: key);
@@ -41,11 +43,6 @@ class _MyTutorLoginScreenState extends State<MyTutorLoginScreen> {
         body: SingleChildScrollView(
       child: Stack(
         children: [
-          Container(
-              decoration: const BoxDecoration(
-                  image: DecorationImage(
-                      image: AssetImage("assets/images/background.jpg"),
-                      fit: BoxFit.cover))),
           Center(
             child: SizedBox(
               width: ctrwidth,
@@ -240,10 +237,14 @@ class _MyTutorLoginScreenState extends State<MyTutorLoginScreen> {
               gravity: ToastGravity.BOTTOM,
               timeInSecForIosWeb: 1,
               fontSize: 16.0);
+          var extractdata = data['data'];
+          User user = User.fromJson(extractdata);
           Navigator.pushReplacement(
               context,
               MaterialPageRoute(
-                  builder: (content) => const MyTutorMainScreen()));
+                  builder: (content) => MyTutorMainScreen(
+                        user: user,
+                      )));
         } else {
           Fluttertoast.showToast(
               msg: "Failed",
