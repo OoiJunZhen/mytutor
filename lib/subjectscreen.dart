@@ -20,11 +20,13 @@ class _MyTutorSubjectScreenState extends State<MyTutorSubjectScreen> {
   int currentIndex = 0;
   List<Subjects> subjectList = <Subjects>[];
   var color;
+  TextEditingController searchCtrl = TextEditingController();
+  String search = "";
 
   @override
   void initState() {
     super.initState();
-    _loadSubjects(1);
+    _loadSubjects(1, search);
   }
 
   @override
@@ -39,6 +41,14 @@ class _MyTutorSubjectScreenState extends State<MyTutorSubjectScreen> {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Subjects'),
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.search),
+            onPressed: () {
+              _loadSearchDialog();
+            },
+          ),
+        ],
       ),
       body: Column(children: [
         Expanded(
@@ -109,7 +119,7 @@ class _MyTutorSubjectScreenState extends State<MyTutorSubjectScreen> {
               return SizedBox(
                 width: 40,
                 child: TextButton(
-                    onPressed: () => {_loadSubjects(index + 1)},
+                    onPressed: () => {_loadSubjects(index + 1, "")},
                     child: Text(
                       (index + 1).toString(),
                       style: TextStyle(color: color),
@@ -122,13 +132,14 @@ class _MyTutorSubjectScreenState extends State<MyTutorSubjectScreen> {
     );
   }
 
-  _loadSubjects(int pageno) {
+  _loadSubjects(int pageno, String search) {
     curpage = pageno;
     numofpage ?? 1;
     http.post(
         Uri.parse(CONSTANTS.server + "/mytutor/mobile/php/load_subjects.php"),
         body: {
           'pageno': pageno.toString(),
+          'search': search,
         }).timeout(
       const Duration(seconds: 5),
       onTimeout: () {
@@ -150,5 +161,47 @@ class _MyTutorSubjectScreenState extends State<MyTutorSubjectScreen> {
         setState(() {});
       }
     });
+  }
+
+  void _loadSearchDialog() {
+    searchCtrl.text = "";
+    showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return StatefulBuilder(
+            builder: (context, StateSetter setState) {
+              return AlertDialog(
+                title: const Text(
+                  "Search ",
+                ),
+                content: SizedBox(
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      TextField(
+                        controller: searchCtrl,
+                        decoration: InputDecoration(
+                            labelText: 'Search Subject',
+                            border: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(5.0))),
+                      ),
+                      const SizedBox(height: 5),
+                    ],
+                  ),
+                ),
+                actions: [
+                  ElevatedButton(
+                    onPressed: () {
+                      search = searchCtrl.text;
+                      Navigator.of(context).pop();
+                      _loadSubjects(1, search);
+                    },
+                    child: const Text("Search"),
+                  )
+                ],
+              );
+            },
+          );
+        });
   }
 }

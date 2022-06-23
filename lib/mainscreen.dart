@@ -1,11 +1,6 @@
-import 'dart:convert';
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
-import 'package:http/http.dart' as http;
 import 'package:mytutor/subjectscreen.dart';
 import 'package:mytutor/tutorscreen.dart';
-import 'constants.dart';
-import 'model/subjects.dart';
 import 'model/user.dart';
 
 class MyTutorMainScreen extends StatefulWidget {
