@@ -5,7 +5,6 @@ import 'package:http/http.dart' as http;
 import 'package:mytutor/constants.dart';
 import 'package:mytutor/mainscreen.dart';
 import 'package:mytutor/registerscreen.dart';
-import 'package:mytutor/subjectscreen.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'model/user.dart';
 
@@ -22,6 +21,7 @@ class _MyTutorLoginScreenState extends State<MyTutorLoginScreen> {
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
   final _formKey = GlobalKey<FormState>();
+  int cart = 0;
 
   @override
   void initState() {

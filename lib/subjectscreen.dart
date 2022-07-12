@@ -1,6 +1,8 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:fluttertoast/fluttertoast.dart';
+import 'package:mytutor/cartscreen.dart';
 import 'model/subjects.dart';
 import 'model/user.dart';
 import 'package:http/http.dart' as http;
@@ -48,6 +50,24 @@ class _MyTutorSubjectScreenState extends State<MyTutorSubjectScreen> {
               _loadSearchDialog();
             },
           ),
+          TextButton.icon(
+            onPressed: () async {
+              await Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (content) => CartScreen(
+                            user: widget.user,
+                          )));
+              _loadSubjects(1, search);
+              _loadMyCart();
+            },
+            icon: const Icon(
+              Icons.shopping_cart,
+              color: Colors.black,
+            ),
+            label: Text(widget.user.cart.toString(),
+                style: const TextStyle(color: Colors.black)),
+          ),
         ],
       ),
       body: Column(children: [
@@ -62,7 +82,7 @@ class _MyTutorSubjectScreenState extends State<MyTutorSubjectScreen> {
                         child: Column(
                       children: [
                         Flexible(
-                          flex: 6,
+                          flex: 4,
                           child: CachedNetworkImage(
                             imageUrl: CONSTANTS.server +
                                 "/mytutor/mobile/assets/courses/" +
@@ -86,18 +106,32 @@ class _MyTutorSubjectScreenState extends State<MyTutorSubjectScreen> {
                                       fontSize: 16,
                                       fontWeight: FontWeight.bold),
                                 ),
-                                const SizedBox(
-                                  height: 5,
+                                Row(
+                                  children: [
+                                    Expanded(
+                                      flex: 6,
+                                      child: Column(children: [
+                                        Text("RM " +
+                                            double.parse(subjectList[index]
+                                                    .subjectPrice
+                                                    .toString())
+                                                .toStringAsFixed(2)),
+                                        Text(subjectList[index]
+                                                .subjectRating
+                                                .toString() +
+                                            " stars"),
+                                      ]),
+                                    ),
+                                    Expanded(
+                                        flex: 4,
+                                        child: IconButton(
+                                            onPressed: () {
+                                              _addToCartDialog(index);
+                                            },
+                                            icon: const Icon(
+                                                Icons.shopping_cart))),
+                                  ],
                                 ),
-                                Text("RM " +
-                                    double.parse(subjectList[index]
-                                            .subjectPrice
-                                            .toString())
-                                        .toStringAsFixed(2)),
-                                Text(subjectList[index]
-                                        .subjectRating
-                                        .toString() +
-                                    " stars"),
                               ],
                             ))
                       ],
@@ -132,7 +166,7 @@ class _MyTutorSubjectScreenState extends State<MyTutorSubjectScreen> {
     );
   }
 
-  _loadSubjects(int pageno, String search) {
+  void _loadSubjects(int pageno, String search) {
     curpage = pageno;
     numofpage ?? 1;
     http.post(
@@ -143,20 +177,21 @@ class _MyTutorSubjectScreenState extends State<MyTutorSubjectScreen> {
         }).timeout(
       const Duration(seconds: 5),
       onTimeout: () {
-        return http.Response(
-            'Error', 408); // Request Timeout response status code
+        return http.Response('Error', 408);
       },
     ).then((response) {
       var jsondata = jsonDecode(response.body);
+      print(jsondata);
       if (response.statusCode == 200 && jsondata['status'] == 'success') {
         var extractdata = jsondata['data'];
         numofpage = int.parse(jsondata['numofpage']);
-
         if (extractdata['subjects'] != null) {
           subjectList = <Subjects>[];
           extractdata['subjects'].forEach((v) {
             subjectList.add(Subjects.fromJson(v));
           });
+        } else {
+          subjectList.clear();
         }
         setState(() {});
       }
@@ -203,5 +238,95 @@ class _MyTutorSubjectScreenState extends State<MyTutorSubjectScreen> {
             },
           );
         });
+  }
+
+  void _addToCartDialog(int index) {
+    showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return StatefulBuilder(
+            builder: (context, StateSetter setState) {
+              return AlertDialog(
+                title: const Text(
+                  "Do you sure to add subject to cart! ",
+                ),
+                actions: <Widget>[
+                  TextButton(
+                    child: const Text("Yes"),
+                    onPressed: () {
+                      Navigator.of(context).pop();
+                      _addtoCart(index);
+                    },
+                  ),
+                  TextButton(
+                    child: const Text("Yes"),
+                    onPressed: () {
+                      Navigator.of(context).pop();
+                    },
+                  )
+                ],
+              );
+            },
+          );
+        });
+  }
+
+  void _addtoCart(int index) {
+    http.post(
+        Uri.parse(CONSTANTS.server + "/mytutor/mobile/php/insert_cart.php"),
+        body: {
+          "email": widget.user.email.toString(),
+          "subjectid": subjectList[index].subjectId.toString(),
+        }).timeout(
+      const Duration(seconds: 5),
+      onTimeout: () {
+        return http.Response(
+            'Error', 408); // Request Timeout response status code
+      },
+    ).then((response) {
+      var jsondata = jsonDecode(response.body);
+      print(jsondata);
+      if (response.statusCode == 200 && jsondata['status'] == 'success') {
+        print(jsondata['data']['carttotal'].toString());
+        setState(() {
+          widget.user.cart = jsondata['data']['carttotal'].toString();
+        });
+        Fluttertoast.showToast(
+            msg: "Success Added to Cart",
+            toastLength: Toast.LENGTH_SHORT,
+            gravity: ToastGravity.BOTTOM,
+            timeInSecForIosWeb: 1,
+            fontSize: 16.0);
+      } else {
+        Fluttertoast.showToast(
+            msg: "Subject Already in Cart",
+            toastLength: Toast.LENGTH_SHORT,
+            gravity: ToastGravity.BOTTOM,
+            timeInSecForIosWeb: 1,
+            fontSize: 16.0);
+      }
+    });
+  }
+
+  void _loadMyCart() {
+    http.post(
+        Uri.parse(CONSTANTS.server + "/mytutor/mobile/php/load_cartqty.php"),
+        body: {
+          "email": widget.user.email.toString(),
+        }).timeout(
+      const Duration(seconds: 5),
+      onTimeout: () {
+        return http.Response('Error', 408);
+      },
+    ).then((response) {
+      print(response.body);
+      var jsondata = jsonDecode(response.body);
+      if (response.statusCode == 200 && jsondata['status'] == 'success') {
+        print(jsondata['data']['carttotal'].toString());
+        setState(() {
+          widget.user.cart = jsondata['data']['carttotal'].toString();
+        });
+      }
+    });
   }
 }
